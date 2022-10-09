@@ -24,7 +24,6 @@ class fb {
     fun getTitles(): String? {
         return title
     }
-
     fun getDescription(): String? {
         return desc
     }
