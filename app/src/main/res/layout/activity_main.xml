@@ -7,13 +7,78 @@
     tools:context=".MainActivity">
 
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+
+        <EditText
+            android:id="@+id/edDay"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/ed_bg_outline"
+            android:ems="10"
+            android:fontFamily="@font/brutal"
+            android:gravity="center"
+            android:hint="Дата"
+            android:inputType="numberSigned"
+            android:maxLength="2"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/base_dark"
+            android:textColorHint="@color/base_dark"
+            android:textSize="24sp" />
+
+        <Spinner
+            android:id="@+id/spMonth"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/ed_bg_outline"
+            android:contentDescription="month"
+            android:gravity="center"
+            android:spinnerMode="dropdown" />
+
+        <EditText
+            android:id="@+id/edYear"
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/ed_bg_outline"
+            android:ems="10"
+            android:fontFamily="@font/brutal"
+            android:gravity="center"
+            android:hint="Год"
+            android:inputType="numberSigned"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/base_dark"
+            android:textColorHint="@color/base_dark"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/ed_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/gg"
         android:ems="10"
         android:fontFamily="@font/activist"
@@ -28,9 +93,9 @@
         android:textColor="@color/base_dark"
         android:textColorHint="@color/base_dark"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/btn_pick_date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_pick_date" />
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <Button
         android:id="@+id/btn_add"
@@ -53,24 +118,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btn_pick_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginRight="64dp"
-        android:backgroundTint="@color/base_dark"
-        android:fontFamily="@font/activist"
-        android:paddingLeft="32dp"
-        android:paddingTop="24dp"
-        android:paddingRight="32dp"
-        android:paddingBottom="24dp"
-        android:text="выбрать дату"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -103,33 +150,6 @@
         app:layout_constraintEnd_toEndOf="@+id/ed_title"
         app:layout_constraintStart_toStartOf="@+id/ed_title"
         app:layout_constraintTop_toBottomOf="@+id/ed_title" />
-
-    <TextView
-        android:id="@+id/tv_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/gg"
-        android:ems="10"
-        android:fontFamily="@font/activist"
-        android:gravity="center"
-        android:hint="Дата"
-        android:inputType="date"
-        android:paddingLeft="32dp"
-        android:paddingTop="24dp"
-        android:paddingRight="32dp"
-        android:paddingBottom="24dp"
-        android:textColor="@color/base_dark"
-        android:textColorHint="@color/base_dark"
-        android:textSize="24sp"
-        android:typeface="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_pick_date"
-        app:layout_constraintEnd_toStartOf="@+id/btn_pick_date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_pick_date" />
 
     <Button
         android:id="@+id/btn_load_img"

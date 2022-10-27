@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape>
-            <corners android:radius="16dp"/>
-        </shape>
+        <inset android:drawable="@drawable/no_photo" android:inset="8dp"/>
     </item>
 </selector>
