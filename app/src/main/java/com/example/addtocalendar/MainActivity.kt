@@ -153,7 +153,26 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else {
-                // adding date without bitmap
+                val request = kotlinx.coroutines.MainScope()
+                request.launch {
+                    var id: Int
+                    withContext(IO) {
+                        id = addingDate(retrofitServices, date)
+                    }
+                    if (id == -1) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Не удалось сохранить дату",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Дата сохранена",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
             }
 
         }
