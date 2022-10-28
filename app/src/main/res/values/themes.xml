@@ -19,4 +19,8 @@
         <item name="colorPrimary">@color/base_dark</item>
         <item name="colorOnPrimary">@color/cardview_light_background</item>
     </style>
+
+    <style name="Button.Transparent" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/base_dark</item>
+    </style>
 </resources>

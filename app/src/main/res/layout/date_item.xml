@@ -36,6 +36,24 @@
                 app:srcCompat="@drawable/no_photo_inset"
                 tools:srcCompat="@drawable/no_photo_inset" />
 
+            <TextView
+                android:id="@+id/tvEditDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/btn_bg"
+                android:fontFamily="@font/brutal"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="Редактировать"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imPhoto"
+                app:layout_constraintStart_toStartOf="@+id/imPhoto" />
+
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
                 android:layout_width="wrap_content"

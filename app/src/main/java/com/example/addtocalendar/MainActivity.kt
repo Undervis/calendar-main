@@ -3,6 +3,7 @@ package com.example.addtocalendar
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -18,6 +19,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,6 +67,12 @@ class MainActivity : AppCompatActivity() {
         val btnAddDate: Button = findViewById(R.id.btn_add)
         val btnLoadImg: Button = findViewById(R.id.btn_load_img)
 
+        val btnEdit: Button = findViewById(R.id.btn_edit)
+        btnEdit.setOnClickListener {
+            val intent = Intent(this, EditActivity::class.java)
+            startActivity(intent)
+        }
+
         val spMonth: Spinner = findViewById(R.id.spMonth)
         val edDay: EditText = findViewById(R.id.edDay)
         val edYear: EditText = findViewById(R.id.edYear)
@@ -83,24 +91,49 @@ class MainActivity : AppCompatActivity() {
             callingDialog(this, NO_URL_DIALOG, prefs)
         }
 
+        val tvConnectionStatus: TextView = findViewById(R.id.tvConnectionStatus)
+        val pbConnectionCheck: ProgressBar = findViewById(R.id.pbConnectionCheck)
+
+        val checkConnection = kotlinx.coroutines.MainScope()
+        checkConnection.launch {
+            val connection: Boolean
+            withContext(IO) { connection = testConnection(url) }
+            pbConnectionCheck.visibility = View.INVISIBLE
+            if (connection) {
+                tvConnectionStatus.visibility = View.INVISIBLE
+            } else {
+                tvConnectionStatus.text = "Нет подключения к серверу"
+                callingDialog(this@MainActivity, CONNECTION_ERROR_DIALOG, prefs)
+            }
+        }
+
         btnLoadImg.setOnClickListener {
             getImage.launch("image/*")
         }
 
         btnAddDate.setOnClickListener()
         {
-            if (edYear.text.isEmpty() || edDay.text.isEmpty()
+            if (edYear.text.isEmpty()
                 || edDescription.text.isEmpty() || edTitle.text.isEmpty()
-                || spMonth.selectedItemPosition == 0
             ) {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 0 ) {
+                Toast.makeText(this, "Недопустимый день месяца", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
             val retrofitServices: RetrofitServices =
                 RetrofitClient.getClient(url).create(RetrofitServices::class.java)
 
-            val day = edDay.text.toString().toInt()
+            val day: Int
+            if (edDay.text.isNotEmpty()) {
+                day = edDay.text.toString().toInt()
+            } else {
+                day = 0
+            }
             val month = spMonth.selectedItemPosition
             val year = edYear.text.toString().toInt()
             val title: String = edTitle.text.toString()
@@ -137,6 +170,12 @@ class MainActivity : AppCompatActivity() {
                             imgResult = uploadImage(retrofitServices, Uri.parse(filePath), id)
                         }
                         if (imgResult) {
+                            edDay.text.clear()
+                            edYear.text.clear()
+                            edTitle.text.clear()
+                            edDescription.text.clear()
+                            spMonth.setSelection(0)
+                            Picasso.get().load(R.drawable.no_image).into(imgPhoto)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Дата сохранена",
@@ -166,6 +205,11 @@ class MainActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
+                        edDay.text.clear()
+                        edYear.text.clear()
+                        edTitle.text.clear()
+                        edDescription.text.clear()
+                        spMonth.setSelection(0)
                         Toast.makeText(
                             this@MainActivity,
                             "Дата сохранена",
@@ -196,9 +240,9 @@ class MainActivity : AppCompatActivity() {
             MultipartBody.Part.createFormData("file", file.name, requestFile)
         val idPart: MultipartBody.Part =
             MultipartBody.Part.createFormData("id", id.toString())
-        val call: Call<ResponseBody?>? = services.uploadImage(filePart, idPart)
+        val call: Call<ResponseBody> = services.uploadImage(filePart, idPart)
         return try {
-            call!!.execute()
+            call.execute()
             true
         } catch (E: IOException) {
             false
