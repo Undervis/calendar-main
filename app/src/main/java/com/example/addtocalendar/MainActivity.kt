@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 0 ) {
+            if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 1 ) {
                 Toast.makeText(this, "Недопустимый день месяца", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
