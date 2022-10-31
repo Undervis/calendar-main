@@ -203,20 +203,20 @@
     </LinearLayout>
 
     <ImageView
-        android:minWidth="100pt"
-        android:maxWidth="300pt"
         android:id="@+id/img_photo"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/corners"
+        android:maxWidth="300pt"
+        android:minWidth="100pt"
         app:layout_constraintBottom_toTopOf="@+id/btn_add"
         app:layout_constraintEnd_toEndOf="@+id/btn_load_img"
         app:layout_constraintStart_toStartOf="@+id/btn_load_img"
         app:layout_constraintTop_toBottomOf="@+id/btn_load_img"
-        app:srcCompat="@drawable/no_image"
-        tools:srcCompat="@drawable/no_image" />
+        app:srcCompat="@drawable/no_image_placer"
+        tools:srcCompat="@drawable/no_image_placer" />
 
     <LinearLayout
         android:id="@+id/linearConnection"

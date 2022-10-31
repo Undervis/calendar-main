@@ -85,26 +85,27 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("url", Context.MODE_PRIVATE)
         secretKey = prefs.getString("secret_key", "museum_1901")
 
-        if (prefs.contains("server_url")) {
-            url = prefs.getString("server_url", "None").toString()
-        } else {
-            callingDialog(this, NO_URL_DIALOG, prefs)
-        }
-
         val tvConnectionStatus: TextView = findViewById(R.id.tvConnectionStatus)
         val pbConnectionCheck: ProgressBar = findViewById(R.id.pbConnectionCheck)
 
-        val checkConnection = kotlinx.coroutines.MainScope()
-        checkConnection.launch {
-            val connection: Boolean
-            withContext(IO) { connection = testConnection(url) }
-            pbConnectionCheck.visibility = View.INVISIBLE
-            if (connection) {
-                tvConnectionStatus.visibility = View.INVISIBLE
-            } else {
-                tvConnectionStatus.text = "Нет подключения к серверу"
-                callingDialog(this@MainActivity, CONNECTION_ERROR_DIALOG, prefs)
+        if (prefs.contains("server_url")) {
+            url = prefs.getString("server_url", "None").toString()
+            val checkConnection = kotlinx.coroutines.MainScope()
+            checkConnection.launch {
+                val connection: Boolean
+                withContext(IO) { connection = testConnection(url) }
+                pbConnectionCheck.visibility = View.INVISIBLE
+                if (connection) {
+                    tvConnectionStatus.visibility = View.INVISIBLE
+                } else {
+                    tvConnectionStatus.text = "Нет подключения к серверу"
+                    callingDialog(this@MainActivity, CONNECTION_ERROR_DIALOG, prefs)
+                }
             }
+        } else {
+            callingDialog(this, NO_URL_DIALOG, prefs)
+            pbConnectionCheck.visibility = View.INVISIBLE
+            tvConnectionStatus.visibility = View.INVISIBLE
         }
 
         btnLoadImg.setOnClickListener {
@@ -120,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 1 ) {
+            if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 1) {
                 Toast.makeText(this, "Недопустимый день месяца", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
@@ -175,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                             edTitle.text.clear()
                             edDescription.text.clear()
                             spMonth.setSelection(0)
-                            Picasso.get().load(R.drawable.no_image).into(imgPhoto)
+                            Picasso.get().load(R.drawable.no_image_placer).into(imgPhoto)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Дата сохранена",

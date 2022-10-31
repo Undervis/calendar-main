@@ -144,7 +144,7 @@ class EditDateActivity : AppCompatActivity() {
                 }
                 edYear.setText(editedDate.year.toString())
                 spMonth.setSelection(editedDate.month)
-                Picasso.get().load("$url/${editedDate.photo}").error(R.drawable.no_photo)
+                Picasso.get().load("$url/${editedDate.photo}").error(R.drawable.no_image_placer)
                     .into(imgPhoto)
             }
         }

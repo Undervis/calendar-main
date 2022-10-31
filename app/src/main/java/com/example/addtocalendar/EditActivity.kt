@@ -125,11 +125,27 @@ class EditActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    Toast.makeText(
-                        this,
-                        "Ближайшие даты $firstDate и $secondDate",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (secondDate.isNotEmpty() and firstDate.isNotEmpty()) {
+                        Toast.makeText(
+                            this,
+                            "Ближайшие даты $firstDate и $secondDate",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    else if (secondDate.isNotEmpty()) {
+                        Toast.makeText(
+                            this,
+                            "Ближайшая дата $secondDate",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    else if (firstDate.isNotEmpty()) {
+                        Toast.makeText(
+                            this,
+                            "Ближайшая дата $firstDate",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 } else {
                     updateRecyclerView(searchData)
                 }
