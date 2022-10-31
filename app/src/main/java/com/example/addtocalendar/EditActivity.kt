@@ -104,22 +104,22 @@ class EditActivity : AppCompatActivity() {
                     var secondDate = ""
                     for (i in dates) {
                         if (year > i.year) {
-                            if (i.month > 0) {
+                            if (i.month > month) {
                                 firstDate =
                                     "${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
                             }
-                            if (i.month > 0 && i.day > 0) {
+                            if (i.month > month && i.day > day) {
                                 firstDate =
                                     "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
                             }
                             break
                         }
                         if (year < i.year) {
-                            if (i.month > 0) {
+                            if (i.month > month) {
                                 secondDate =
                                     "${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
                             }
-                            if (i.month > 0 && i.day > 0) {
+                            if (i.month > month && i.day > day) {
                                 secondDate =
                                     "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
                             }
