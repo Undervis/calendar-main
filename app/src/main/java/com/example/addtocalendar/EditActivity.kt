@@ -103,26 +103,36 @@ class EditActivity : AppCompatActivity() {
                     var firstDate = ""
                     var secondDate = ""
                     for (i in dates) {
-                        if (year > i.year) {
-                            if (i.month > month) {
-                                firstDate =
+                        if (i.year < year) {
+                            if (i.month > 0) {
+                                secondDate =
                                     "${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
+                                if (i.day > 0) {
+                                    secondDate =
+                                        "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
+                                }
                             }
-                            if (i.month > month && i.day > day) {
-                                firstDate =
-                                    "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
+                            else {
+                                secondDate = "${i.year}"
                             }
                             break
                         }
-                        if (year < i.year) {
-                            if (i.month > month) {
-                                secondDate =
+
+                    }
+                    for (i in dates) {
+                        if (i.year > year) {
+                            if (i.month > 0) {
+                                firstDate =
                                     "${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
+                                if (i.day > 0) {
+                                    firstDate =
+                                        "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
+                                }
                             }
-                            if (i.month > month && i.day > day) {
-                                secondDate =
-                                    "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
+                            else {
+                                firstDate = "${i.year}"
                             }
+                            break
                         }
                     }
                     if (secondDate.isNotEmpty() and firstDate.isNotEmpty()) {
