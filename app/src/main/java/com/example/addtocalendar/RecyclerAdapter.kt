@@ -2,15 +2,19 @@ package com.example.addtocalendar
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
-import okio.Utf8
+import java.io.ByteArrayOutputStream
+import kotlin.coroutines.coroutineContext
 
 class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
@@ -29,8 +33,15 @@ class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<R
 
         val tvEditDate: TextView = itemView.findViewById(R.id.tvEditDate)
         tvEditDate.setOnClickListener {
+            val date = data[tvEditDate.tag.toString().toInt()]
             val intent = Intent(parent.context, EditDateActivity::class.java)
-            intent.putExtra("id", tvEditDate.tag.toString())
+            intent.putExtra("id", date.id)
+            intent.putExtra("title", date.title)
+            intent.putExtra("description", date.description)
+            intent.putExtra("day", date.day)
+            intent.putExtra("month", date.month)
+            intent.putExtra("year", date.year)
+            intent.putExtra("photo", date.photo)
             parent.context.startActivity(intent)
         }
         return ViewHolder(itemView)
@@ -39,7 +50,7 @@ class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<R
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val date = data[position]
-        holder.tvEditDate.tag = date.id
+        holder.tvEditDate.tag = position
         if (date.year > 0) {
             holder.tvDate.text = "${date.year}"
         }
@@ -57,11 +68,7 @@ class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<R
         if (photoUrl.contains("\uFEFF")) {
             photoUrl = photoUrl.replace("\uFEFF", "")
         }
-        try {
-            Picasso.get().load(photoUrl).error(R.drawable.no_image_placer).into(holder.imPhoto)
-        } catch (E: IllegalArgumentException) {
-            Picasso.get().load(R.drawable.no_image_placer).into(holder.imPhoto)
-        }
+        Glide.with(holder.itemView).load(photoUrl).error(R.drawable.no_image_placer).into(holder.imPhoto)
     }
 
     override fun getItemCount() = data.size

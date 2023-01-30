@@ -8,14 +8,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import com.squareup.picasso.Picasso
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -46,9 +46,9 @@ class EditDateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_date)
 
-        val id = intent.getStringExtra("id")
-
         window.statusBarColor = resources.getColor(R.color.base_dark)
+
+        val id = intent.getStringExtra("id")
 
         imgPhoto = findViewById(R.id.img_photo)
         imgPhoto!!.clipToOutline = true
@@ -71,7 +71,6 @@ class EditDateActivity : AppCompatActivity() {
         spMonth.adapter = adapter
 
         val prefs = getSharedPreferences("url", Context.MODE_PRIVATE)
-
         url = prefs.getString("server_url", "None").toString()
 
         val retrofitServices: RetrofitServices =
@@ -91,9 +90,6 @@ class EditDateActivity : AppCompatActivity() {
             val tvSecondMessage: TextView = dialog.findViewById(R.id.tvMessageScnd)
             val edTextField: EditText = dialog.findViewById(R.id.edTextField)
             val edConfirmSK: EditText = dialog.findViewById(R.id.edConfirmSK)
-            val imDialogIcon: ImageView = dialog.findViewById(R.id.imDialogIcon)
-            val tvErrorMsg: TextView = dialog.findViewById(R.id.tvErrorMsg)
-            val pbConnection: ProgressBar = dialog.findViewById(R.id.pbConnection)
 
             btnAccept.text = "Удалить"
             tvGeneralMessage.text = "Удаление даты"
@@ -124,43 +120,45 @@ class EditDateActivity : AppCompatActivity() {
             dialog.show()
         }
 
-        var editedDate: DateClass
-        val requestDate = kotlinx.coroutines.MainScope()
-        requestDate.launch {
-            withContext(IO) {
-                editedDate = getDate(retrofitServices, id!!)
-            }
-            if (editedDate.id == -1) {
-                Toast.makeText(
-                    this@EditDateActivity,
-                    "Не удалось загрузить дату",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                edTitle.setText(editedDate.title)
-                edDescription.setText(editedDate.description)
-                if (editedDate.day > 0) {
-                    edDay.setText(editedDate.day.toString())
-                }
-                edYear.setText(editedDate.year.toString())
-                spMonth.setSelection(editedDate.month)
-                Picasso.get().load("$url/${editedDate.photo}").error(R.drawable.no_image_placer)
-                    .into(imgPhoto)
-            }
+        val day = intent.getIntExtra("day", 0)
+        val month = intent.getIntExtra("month", 0)
+        val year = intent.getIntExtra("year", 0)
+        val photo = intent.getStringExtra("photo")
+        var photoUrl = "${url}/${photo}"
+        if (photoUrl.contains("\uFEFF")) {
+            photoUrl = photoUrl.replace("\uFEFF", "")
+        }
+        if (day != 0) {
+            edDay.setText(day.toString())
+        }
+        if (month != 0) {
+            spMonth.setSelection(month)
+        }
+        if (year != 0) {
+            edYear.setText(year.toString())
         }
 
+        edTitle.setText(intent.getStringExtra("title"))
+        edDescription.setText(intent.getStringExtra("description"))
+        Glide.with(this).load(photoUrl).error(R.drawable.no_image_placer).into(imgPhoto!!)
         btnLoadImg.setOnClickListener {
             getImage.launch("image/*")
         }
 
         btnAddDate.setOnClickListener()
         {
-            if (edYear.text.isEmpty() || edDay.text.isEmpty()
+            if (edYear.text.isEmpty()
                 || edDescription.text.isEmpty() || edTitle.text.isEmpty()
-                || spMonth.selectedItemPosition == 0
             ) {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
+            }
+
+            if (edDay.text.isNotEmpty()) {
+                if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 1) {
+                    Toast.makeText(this, "Недопустимый день месяца", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
             }
 
             val day = edDay.text.toString().toInt()
@@ -259,16 +257,6 @@ class EditDateActivity : AppCompatActivity() {
             true
         } catch (E: IOException) {
             false
-        }
-    }
-
-    fun getDate(services: RetrofitServices, id: String): DateClass {
-        val call: Call<DateClass> = services.getDate(id)
-        return try {
-            val date = call.execute().body()
-            date!!
-        } catch (E: IOException) {
-            DateClass(-1, 0, 0, 0, "", "", "")
         }
     }
 

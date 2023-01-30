@@ -120,10 +120,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-
-            if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 1) {
-                Toast.makeText(this, "Недопустимый день месяца", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
+            if (edDay.text.isNotEmpty()) {
+                if (edDay.text.toString().toInt() > 31 || edDay.text.toString().toInt() < 1) {
+                    Toast.makeText(this, "Недопустимый день месяца", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
             }
 
             val retrofitServices: RetrofitServices =
