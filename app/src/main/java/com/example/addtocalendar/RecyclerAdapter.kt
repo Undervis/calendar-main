@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
 import kotlin.coroutines.coroutineContext
 

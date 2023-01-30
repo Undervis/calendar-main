@@ -18,8 +18,9 @@ import android.view.Window
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
+
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -177,7 +178,7 @@ class MainActivity : AppCompatActivity() {
                             edTitle.text.clear()
                             edDescription.text.clear()
                             spMonth.setSelection(0)
-                            Picasso.get().load(R.drawable.no_image_placer).into(imgPhoto)
+                            Glide.with(this@MainActivity).load(R.drawable.no_image_placer).into(imgPhoto!!)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Дата сохранена",
