@@ -139,7 +139,7 @@ class EditDateActivity : AppCompatActivity() {
 
         edTitle.setText(intent.getStringExtra("title"))
         edDescription.setText(intent.getStringExtra("description"))
-        Glide.with(this).load(photoUrl).error(R.drawable.no_image_placer).into(imgPhoto!!)
+        Glide.with(this).load(photoUrl).error(R.drawable.no_image).into(imgPhoto!!)
         btnLoadImg.setOnClickListener {
             getImage.launch("image/*")
         }

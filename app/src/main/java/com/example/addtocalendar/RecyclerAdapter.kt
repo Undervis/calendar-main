@@ -56,7 +56,7 @@ class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<R
         if (photoUrl.contains("\uFEFF")) {
             photoUrl = photoUrl.replace("\uFEFF", "")
         }
-        Glide.with(holder.itemView).load(photoUrl).error(R.drawable.no_image_placer).into(holder.imPhoto)
+        Glide.with(holder.itemView).load(photoUrl).error(R.drawable.no_image).into(holder.imPhoto)
     }
 
     override fun getItemCount() = data.size

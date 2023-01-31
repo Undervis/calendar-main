@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                             edTitle.text.clear()
                             edDescription.text.clear()
                             spMonth.setSelection(0)
-                            Glide.with(this@MainActivity).load(R.drawable.no_image_placer).into(imgPhoto!!)
+                            Glide.with(this@MainActivity).load(R.drawable.no_image).into(imgPhoto!!)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Дата сохранена",
