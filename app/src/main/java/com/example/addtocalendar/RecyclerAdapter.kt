@@ -2,18 +2,13 @@ package com.example.addtocalendar
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import java.io.ByteArrayOutputStream
-import kotlin.coroutines.coroutineContext
 
 class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
@@ -49,17 +44,11 @@ class RecyclerAdapter (private val data: List<DateClass>):RecyclerView.Adapter<R
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val date = data[position]
+        val dateYear = if (date.year != 0) { date.year } else { "" }
+        val dateDay = if (date.day != 0) { date.day } else { "" }
+        val dateMonth = if (date.month != 0) { MonthAdapter.getMonthByInt(date.month) } else { "" }
         holder.tvEditDate.tag = position
-        if (date.year > 0) {
-            holder.tvDate.text = "${date.year}"
-        }
-        if (date.year > 0 && date.month > 0) {
-            holder.tvDate.text = "${MonthAdapter.getMonthByInt(date.month)} ${date.year}"
-        }
-        if (date.year > 0 && date.month > 0 && date.day > 0) {
-            holder.tvDate.text = "${date.day} ${MonthAdapter.getMonthByInt(date.month)} ${date.year}"
-        }
-
+        holder.tvDate.text = "$dateDay $dateMonth $dateYear".strip()
         holder.tvTitle.text = date.title
         holder.tvDescription.text = date.description
         holder.imPhoto.clipToOutline = true

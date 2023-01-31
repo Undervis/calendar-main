@@ -9,7 +9,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -147,7 +146,7 @@ class EditDateActivity : AppCompatActivity() {
 
         btnAddDate.setOnClickListener()
         {
-            if (edYear.text.isEmpty()
+            if ((edYear.text.isEmpty() && edDay.text.isEmpty() && month == 0)
                 || edDescription.text.isEmpty() || edTitle.text.isEmpty()
             ) {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()

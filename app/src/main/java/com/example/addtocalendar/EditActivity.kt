@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.os.IResultReceiver._Parcel
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Response
+import java.util.Date
 
 class EditActivity : AppCompatActivity() {
 
@@ -62,105 +64,25 @@ class EditActivity : AppCompatActivity() {
 
         btnSearch.setOnClickListener {
             searchData.clear()
-            var mode = 0
-            var year = 0
-            var month = 0
-            var day = 0
-            if (edYear.text.isNotEmpty()) {
-                mode = 1
-                year = edYear.text.toString().toInt()
-            }
-            if (edYear.text.isNotEmpty() && spMonth.selectedItemPosition > 0) {
-                mode = 2
-                year = edYear.text.toString().toInt()
-                month = spMonth.selectedItemPosition
-            }
-            if (edYear.text.isNotEmpty() && spMonth.selectedItemPosition > 0 && edDay.text.isNotEmpty()) {
-                mode = 3
-                year = edYear.text.toString().toInt()
-                month = spMonth.selectedItemPosition
-                day = edDay.text.toString().toInt()
-            }
-            if (mode > 0) {
-                for (i in dates) {
-                    when (mode) {
-                        1 ->
-                            if (year == i.year) {
-                                searchData.add(i)
-                            }
-                        2 ->
-                            if (year == i.year && month == i.month) {
-                                searchData.add(i)
-                            }
-                        3 ->
-                            if (year == i.year && month == i.month && day == i.day) {
-                                searchData.add(i)
-                            }
-                    }
-
-                }
-                if (searchData.isEmpty()) {
-                    var firstDate = ""
-                    var secondDate = ""
-                    for (i in dates) {
-                        if (i.year < year) {
-                            if (i.month > 0) {
-                                secondDate =
-                                    "${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
-                                if (i.day > 0) {
-                                    secondDate =
-                                        "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
-                                }
-                            }
-                            else {
-                                secondDate = "${i.year}"
-                            }
-                            break
-                        }
-
-                    }
-                    for (i in dates) {
-                        if (i.year > year) {
-                            if (i.month > 0) {
-                                firstDate =
-                                    "${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
-                                if (i.day > 0) {
-                                    firstDate =
-                                        "${i.day} ${MonthAdapter.getMonthByInt(i.month)} ${i.year}"
-                                }
-                            }
-                            else {
-                                firstDate = "${i.year}"
-                            }
-                            break
-                        }
-                    }
-                    if (secondDate.isNotEmpty() and firstDate.isNotEmpty()) {
-                        Toast.makeText(
-                            this,
-                            "Ближайшие даты $firstDate и $secondDate",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                    else if (secondDate.isNotEmpty()) {
-                        Toast.makeText(
-                            this,
-                            "Ближайшая дата $secondDate",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                    else if (firstDate.isNotEmpty()) {
-                        Toast.makeText(
-                            this,
-                            "Ближайшая дата $firstDate",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } else {
-                    updateRecyclerView(searchData)
-                }
-            } else {
+            val year = if (edYear.text.isNotEmpty()) { edYear.text.toString().toInt() } else { 0 }
+            val month = spMonth.selectedItemPosition
+            val day = if (edDay.text.isNotEmpty()) { edDay.text.toString().toInt() } else { 0 }
+            if (year == 0 && day == 0 && month == 0){
                 updateRecyclerView(dates)
+                return@setOnClickListener
+            } else {
+                for (i in dates) {
+                    if (((i.year == year) && (i.year != 0)) ||
+                        ((i.day == day) && (i.day != 0)) ||
+                        ((i.month == month) && (i.month != 0))) {
+                        searchData.add(i)
+                    }
+                }
+            }
+            if (searchData.isEmpty()) {
+                Toast.makeText(this@EditActivity, "Не нашлось событий с такой датой", Toast.LENGTH_LONG).show()
+            } else {
+                updateRecyclerView(searchData)
             }
         }
     }
@@ -171,7 +93,7 @@ class EditActivity : AppCompatActivity() {
         rvDates?.adapter = recyclerAdapter
     }
 
-    fun loadData(prefs: SharedPreferences, context: Context) {
+    private fun loadData(prefs: SharedPreferences, context: Context) {
         url = prefs.getString("server_url", "None").toString()
         val baseUrl = "$url/"
         val retrofitServices: RetrofitServices =
@@ -194,7 +116,8 @@ class EditActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<ArrayList<DateClass>>, t: Throwable) {
-                    Toast.makeText(context, "Не удалось подключиться к серверу", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Не удалось подключиться к серверу", Toast.LENGTH_LONG)
+                        .show()
                 }
             })
     }

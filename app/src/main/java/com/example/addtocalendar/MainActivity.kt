@@ -19,15 +19,11 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
-
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.*
-import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Retrofit
 import java.io.*
 import java.util.*
 
@@ -115,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
         btnAddDate.setOnClickListener()
         {
-            if (edYear.text.isEmpty()
+            if ((edYear.text.isEmpty() && edDay.text.isEmpty() && spMonth.selectedItemPosition == 0)
                 || edDescription.text.isEmpty() || edTitle.text.isEmpty()
             ) {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
@@ -131,14 +127,9 @@ class MainActivity : AppCompatActivity() {
             val retrofitServices: RetrofitServices =
                 RetrofitClient.getClient(url).create(RetrofitServices::class.java)
 
-            val day: Int
-            if (edDay.text.isNotEmpty()) {
-                day = edDay.text.toString().toInt()
-            } else {
-                day = 0
-            }
+            val day = if (edDay.text.isNotEmpty()) { edDay.text.toString().toInt() } else { 0 }
             val month = spMonth.selectedItemPosition
-            val year = edYear.text.toString().toInt()
+            val year = if (edYear.text.isNotEmpty()) { edYear.text.toString().toInt() } else { 0 }
             val title: String = edTitle.text.toString()
             val description: String = edDescription.text.toString()
 
