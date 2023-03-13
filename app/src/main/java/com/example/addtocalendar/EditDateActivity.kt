@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -47,7 +48,7 @@ class EditDateActivity : AppCompatActivity() {
 
         window.statusBarColor = resources.getColor(R.color.base_dark)
 
-        val id = intent.getStringExtra("id")
+        val id = intent.getIntExtra("id", 0)
 
         imgPhoto = findViewById(R.id.img_photo)
         imgPhoto!!.clipToOutline = true
@@ -100,7 +101,7 @@ class EditDateActivity : AppCompatActivity() {
                 val deleteRequest = kotlinx.coroutines.MainScope()
                 var deleteResult: Boolean
                 deleteRequest.launch {
-                    withContext(IO) { deleteResult = deleteDate(retrofitServices, id!!) }
+                    withContext(IO) { deleteResult = deleteDate(retrofitServices, id.toString()) }
                     if (deleteResult) {
                         dialog.dismiss()
                         finish()
@@ -194,7 +195,7 @@ class EditDateActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         withContext(IO) {
-                            imgResult = uploadImage(retrofitServices, Uri.parse(filePath), id)
+                            imgResult = uploadImage(retrofitServices, Uri.parse(filePath), id.toString())
                         }
                         if (imgResult) {
                             Toast.makeText(

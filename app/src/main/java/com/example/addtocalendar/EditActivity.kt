@@ -87,6 +87,11 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadData(prefs, this)
+    }
+
     fun updateRecyclerView(dates: ArrayList<DateClass>) {
         rvDates?.layoutManager = LinearLayoutManager(this)
         val recyclerAdapter = RecyclerAdapter(dates)
